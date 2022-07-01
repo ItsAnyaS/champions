@@ -1,0 +1,8 @@
+.hidden {
+    display: none;
+}
+
+#char-img{
+    height: 350px;
+    width: 350px;
+}
