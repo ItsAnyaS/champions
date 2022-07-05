@@ -1,3 +1,8 @@
+body{
+    margin: 0;
+    color: white;
+}
+
 .hidden {
     display: none;
 }
@@ -5,4 +10,64 @@
 #char-img{
     height: 350px;
     width: 350px;
+    position: relative;
+    bottom: 0px;
+
+}
+
+main {
+    background-image: url('images/woods1.jpg');
+    overflow: none;
+    min-height: 100vh;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+#char-name{
+   color: red;
+}
+
+#proficientcies-list{
+color: white;
+display: flex;
+flex-direction: column;
+flex-wrap: wrap;
+height: 300px;
+width: 100px;
+position: absolute;
+top: 35rem;
+left: 40rem;
+}
+
+#spell-list{
+position: absolute;
+color: white;
+position: relative;
+display: flex;
+flex-direction: column;
+flex-wrap: wrap;
+height: 300px;
+overflow: scroll;
+min-width: 600px;
+min-height: 100px;
+top: 0;
+gap: 5px 2rem;
+left: 20rem;
+}
+
+#class-select{
+    position: relative;
+    top: 0rem;
+    height: 25px;
+    border: none;
+    border-radius: 5px;
+
+}
+
+#build-section{
+    background-color: grey;
 }

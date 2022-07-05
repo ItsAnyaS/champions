@@ -2,6 +2,15 @@ const classSelector = document.getElementById('class-select')
 const baseImgUrl = 'https://www.dndbeyond.com/attachments/thumbnails/0/'
 const profList = document.getElementById('proficientcies-list')
 const charImg = document.getElementById('char-img')
+let spellList = document.getElementById('spell-list')
+//Custom stuff
+let buildSection = document.querySelector('#build-section')
+let myBuilds = document.querySelector('#my-builds')
+let saveClassBtn = document.querySelector('#save-class')
+let savedClassesList = document.querySelector('#my-builds')
+
+let cloneBtn = document.querySelector('#clone-btn')
+
 const portraitMap = {
     'barbarian': '679/400/417/c3barbarianintro.png',
     'bard': '684/400/406/c3bardintro.png',
@@ -16,6 +25,93 @@ const portraitMap = {
     'wizard':'717/400/484/c3wizardintro.png',
     'warlock':'716/400/512/c3warlockintro.png'
  }
+
+const classArr = []
+
+let tempClass = {
+  name: 'temp',
+  proficienties: [],
+  spells: [],
+  characterImg: '',
+}
+let spells = []
+let profArr = []
+let charImgSrc = ''
+let currentChar
+
+
+
+const postChar = async (charName1, arr, arr2, img5) => {
+  req = await fetch('http://localhost:3000/characters', {
+    method: 'POST',
+    headers:{'content-type':'application/json', 'Accept': 'application/json'},
+    body:JSON.stringify({name: charName1,
+  proficienties: arr,
+  spells: arr2,
+  characterImg: img5,
+  })
+
+  })
+  res = await req.json()
+}
+
+const getChar = async () => {
+req = await fetch('http://localhost:3000/characters', {
+  method: 'GET',
+  headers: {'Accept': 'application/json', 'content-type': 'application/json'}
+})
+return res = await req.json()
+}
+
+saveClassBtn.addEventListener('click', async (e) => {
+  e.preventDefault()
+  buildSection.innerHTML = ''
+  let data = await getChar()
+  option = document.createElement('option')
+  option.innerText = data[1].name
+  savedClassesList.append(option)
+})
+
+const loadCustomOptions = async() => {
+data = await getChar()
+data.forEach((char) => {
+  option = document.createElement('option')
+  option.textContent = char.name
+  savedClassesList.append(option)
+}
+)}
+
+
+savedClassesList.addEventListener('change', async (e) => {
+data = await getChar()
+currentChar = e.target.value
+
+data.forEach((char) => {
+  if (currentChar == char.name){
+  let customCharName = document.createElement('h3')
+  customCharName.textContent = currentChar
+  let customCharImg = document.createElement('img')
+  customCharImg.setAttribute('src', char.characterImg)
+  let customCharProfList = document.createElement('ul')
+    char.proficienties.forEach((prof) => {
+    li = document.createElement('li')
+    li.textContent = prof
+    customCharProfList.append(li)
+})
+let customCharSpellList = document.createElement('ul')
+  char.spells.forEach((spell) => {
+  li = document.createElement('li')
+  li.textContent = spell
+  customCharSpellList.append(li)
+}) 
+buildSection.append(customCharName, customCharImg, customCharProfList, customCharSpellList)
+  }
+})
+
+
+
+
+})
 
 let request = async () => {
   // initiate request to dnd server
@@ -32,10 +128,10 @@ let request = async () => {
 
   
 
-  classSelector.addEventListener('change', async (e) => {
+classSelector.addEventListener('change', async (e) => {
     document.getElementById('seleted-class').innerText = e.target.value
     let src = `${baseImgUrl}${portraitMap[e.target.value.toLowerCase()]}`
-    console.log(e.target.value)
+    charImgSrc = src.slice()
     charImg.setAttribute('src', src)
     charImg.classList.remove('hidden')
     req = await fetch(`https://www.dnd5eapi.co/api/classes/${e.target.value.toLowerCase()}`)
@@ -44,13 +140,64 @@ let request = async () => {
     res.proficiencies.forEach((prof) => {
         let li = document.createElement('li')
         li.innerText = prof.name
+        profArr.push(prof.name)
         profList.append(li)
         
     })
     profList.classList.remove('hidden')
   })
-}
+} 
 
+classSelector.addEventListener('change', async (e) => {
+  document.getElementById('seleted-class').innerText = e.target.value
 
-// the request function will now automatically run when the page loads
+  req = await fetch(`https://www.dnd5eapi.co/api/classes/${e.target.value.toLowerCase()}/spells`)
+  res = await req.json()
+  spellList.innerHTML = ''
+  res.results.forEach((spell) => {
+        li = document.createElement('li')
+        li.innerText = spell.name
+        spellList.append(li)
+        spells.push(spell.name)
+        //tempClass.spells.push(spell.name)
+  })
+  spellList.classList.remove('hidden')
+})
+
+cloneBtn.addEventListener('click', () => {
+buildSection.innerHTML = ''
+let classObj = {...tempClass}
+let name = document.querySelector('#seleted-class').innerText
+classObj.name = name
+classObj.spells = spells
+classObj.proficienties = [...profArr]
+classObj.characterImg = charImgSrc
+classArr.push(classObj)
+postChar(name, classObj.proficienties, spells, charImgSrc)
+spells = []
+charImgSrc = ''
+profArr = []
+currentChar = classArr[classArr.length-1]
+customCharName = document.createElement('h3')
+customCharName.textContent = currentChar.name
+customCharImg = document.createElement('img')
+customCharImg.setAttribute('src', currentChar.characterImg)
+customCharProfList = document.createElement('ul')
+currentChar.proficienties.forEach((prof) => {
+  li = document.createElement('li')
+  li.textContent = prof
+  customCharProfList.append(li)
+})
+customCharSpellList = document.createElement('ul')
+currentChar.spells.forEach((spell) => {
+  li = document.createElement('li')
+  li.textContent = spell
+  customCharSpellList.append(li)
+}) 
+buildSection.append(customCharName, customCharImg, customCharProfList, customCharSpellList)
+})
 request()
+loadCustomOptions()
+
+
+
