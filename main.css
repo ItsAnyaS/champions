@@ -12,6 +12,7 @@ body{
     width: 350px;
     position: relative;
     bottom: 0px;
+    border-radius: 50%;
 
 }
 
@@ -39,8 +40,9 @@ flex-wrap: wrap;
 height: 300px;
 width: 100px;
 position: absolute;
-top: 35rem;
+top: 675px;
 left: 40rem;
+font-size: 10px;
 }
 
 #spell-list{
@@ -51,21 +53,35 @@ display: flex;
 flex-direction: column;
 flex-wrap: wrap;
 height: 300px;
-overflow: scroll;
 min-width: 600px;
 min-height: 100px;
-top: 0;
+top: 100px;
 gap: 5px 2rem;
 left: 20rem;
+font-size: 10px;
+overflow: none;
 }
 
 #class-select{
-    position: relative;
-    top: 0rem;
+    position: absolute;
+    top: 20px;
+    left: 10px;
     height: 25px;
     border: none;
     border-radius: 5px;
 
+}
+
+#clone-btn{
+position: absolute;
+top: 0;
+left: 110px;
+}
+
+#class-select-label{
+position: absolute;
+top: 0;
+left: 10px;
 }
 
 #build-section{

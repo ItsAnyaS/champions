@@ -85,6 +85,7 @@ data.forEach((char) => {
 savedClassesList.addEventListener('change', async (e) => {
 data = await getChar()
 currentChar = e.target.value
+buildSection.innerHTML = ''
 
 data.forEach((char) => {
   if (currentChar == char.name){
